@@ -10,7 +10,9 @@
             xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.geekbrains.cloud.jan.Client.Client">
+
    <children>
+
       <Button layoutX="398.0" layoutY="200.0" mnemonicParsing="false" onAction="#upload" prefHeight="75.0" prefWidth="139.0" text="Upload" />
       <Button layoutX="398.0" layoutY="289.0" mnemonicParsing="false" onAction="#download" prefHeight="75.0" prefWidth="139.0" text="Download" />
       <Button fx:id="renButton" layoutX="398.0" layoutY="573.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="139.0" text="Rename" />
