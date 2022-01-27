@@ -9,6 +9,7 @@ public final class Sender {
     private Sender () {
 
     }
+
     public static void getFile(DataInputStream is, Path clientDir, int size2, byte[] buffer) throws IOException {
         String fileName = is.readUTF();
         System.out.println("Received: " + fileName);
@@ -32,5 +33,10 @@ public final class Sender {
         os.writeLong(size);
         os.write(bytes);
         os.flush();
+    }
+
+    public static void sendFolder (String folder, DataOutputStream os) throws IOException {
+            os.writeUTF("#resp_folderBack#");
+            os.writeUTF(folder);
     }
 }

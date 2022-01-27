@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -13,10 +14,17 @@
    <children>
       <Button layoutX="398.0" layoutY="200.0" mnemonicParsing="false" onAction="#upload" prefHeight="75.0" prefWidth="139.0" text="Upload" />
       <Button layoutX="398.0" layoutY="289.0" mnemonicParsing="false" onAction="#download" prefHeight="75.0" prefWidth="139.0" text="Download" />
+
       <Button fx:id="renButton" layoutX="398.0" layoutY="573.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="139.0" text="Rename" />
       <Button fx:id="movButton" layoutX="398.0" layoutY="482.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="139.0" text="Move" />
+
       <ListView fx:id="clientList" layoutX="23.0" layoutY="111.0" prefHeight="614.0" prefWidth="332.0" />
       <ListView fx:id="serverList" layoutX="581.0" layoutY="111.0" prefHeight="614.0" prefWidth="332.0" />
+
+      <TextField fx:id="clientFolderField" layoutX="24.0" layoutY="62.0" prefHeight="39.0" prefWidth="256.0" />
+      <Button onAction="#folderBackClient" layoutX="284.0" layoutY="61.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="70.0" text="Back" />
+      <TextField fx:id="serverFolderField" layoutX="582.0" layoutY="62.0" prefHeight="39.0" prefWidth="256.0" />
+      <Button onAction="#folderBackServer" layoutX="842.0" layoutY="61.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="70.0" text="Back" />
 
       <Text layoutX="149.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Client" wrappingWidth="80.83860206604004">
          <font>
@@ -28,6 +36,5 @@
             <Font size="25.0" />
          </font>
       </Text>
-
    </children>
 </AnchorPane>
