@@ -1,5 +1,7 @@
-package com.geekbrains.cloud.jan.Model;
+package com.geekbrains.cloud.jan.Model.CommandClass;
 
+import com.geekbrains.cloud.jan.Model.CloudMessage;
+import com.geekbrains.cloud.jan.Model.CommandType;
 import lombok.Data;
 
 import java.io.IOException;
@@ -7,6 +9,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
+
+/**
+ * Отправка списка файлов сервера.
+ */
 
 @Data
 public class ListMessage implements CloudMessage {

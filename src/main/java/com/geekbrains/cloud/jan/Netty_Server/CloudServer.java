@@ -1,4 +1,4 @@
-package com.geekbrains.cloud.jan.Netty_Cloud;
+package com.geekbrains.cloud.jan.Netty_Server;
 
 
 import io.netty.handler.codec.serialization.ClassResolvers;

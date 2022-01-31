@@ -1,7 +1,13 @@
-package com.geekbrains.cloud.jan.Model;
+package com.geekbrains.cloud.jan.Model.CommandClass;
 
 
+import com.geekbrains.cloud.jan.Model.CloudMessage;
+import com.geekbrains.cloud.jan.Model.CommandType;
 import lombok.Data;
+
+/**
+ * Запрос файла от сервера.
+ */
 
 @Data
 public class FileRequest implements CloudMessage {

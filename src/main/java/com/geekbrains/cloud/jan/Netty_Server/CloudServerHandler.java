@@ -1,46 +1,60 @@
-package com.geekbrains.cloud.jan.Netty_Cloud;
+package com.geekbrains.cloud.jan.Netty_Server;
 
 import com.geekbrains.cloud.jan.Model.*;
+import com.geekbrains.cloud.jan.Model.CommandClass.*;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Осталось допилить клик по директории
- * Подключить к гит
- */
-
+@Slf4j
 public class CloudServerHandler extends SimpleChannelInboundHandler<CloudMessage> {
 
     private Path currentDir;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        // init client dir
-        currentDir = Paths.get("root/user");
-        sendFolder(ctx);
-        sendList(ctx);
+        currentDir = Paths.get("root/user"); //Директория клиента
+        sendFolder(ctx); // Отправка текущей директории.
+        sendList(ctx); // Отправка списка файлов в текущей директории.
     }
 
+    /**
+     * Канал чтения команд от клиента.
+     */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, CloudMessage cloudMessage) throws Exception {
+        log.info("Received: " + cloudMessage);
+
         switch (cloudMessage.getType()) {
-            case FILE_REQUEST:
+            case FILE_REQUEST: // Запрос файла клиентом.
                 processFileRequest((FileRequest) cloudMessage, ctx);
                 break;
-            case FILE:
+            case FILE: // Скачивание файла клиентом с сервера.
                 processFileMessage((FileMessage) cloudMessage);
                 sendList(ctx);
                 sendFolder(ctx);
                 break;
-            case CLICK_BACK:
-                System.out.println("Ok");
+            case CLICK_BACK: // Сообщение от клиента о нажатии конрки "Назад".
                 processBackOk(ctx);
                 break;
+            case CLICK_DIR: // Сообщение от клиента о двойном клике по директории.
+                processClickDir((ClickDir) cloudMessage,ctx);
+        }
+    }
+
+
+
+    private void processClickDir(ClickDir cloudMessage, ChannelHandlerContext ctx) throws IOException {
+        Path path = currentDir.resolve(cloudMessage.getClickDir());
+        if (Files.isDirectory(path)) {
+            currentDir = path;
+            sendList(ctx);
+            sendFolder(ctx);
         }
     }
 

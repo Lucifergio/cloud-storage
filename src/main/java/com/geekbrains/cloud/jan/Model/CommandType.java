@@ -7,5 +7,6 @@ public enum CommandType {
     LIST,
     FOLDER,
     CLICK_BACK,
-    BACK_OK
+    BACK_OK,
+    CLICK_DIR
 }

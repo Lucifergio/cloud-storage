@@ -2,12 +2,12 @@
 package com.geekbrains.cloud.jan.Client;
 
 import com.geekbrains.cloud.jan.Model.*;
+import com.geekbrains.cloud.jan.Model.CommandClass.*;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import lombok.extern.slf4j.Slf4j;
@@ -35,35 +35,40 @@ public class Client implements Initializable {
     private ObjectDecoderInputStream is;
     private ObjectEncoderOutputStream os;
 
+    /**
+     * Инициализация клиента
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
             clientDir = Paths.get(System.getProperty("user.home"));
 
-            updateClientView();
-            initMouseListeners();
+            updateClientView(); //Обновление клиентской вьюшки.
+            initMouseListeners(); // Читалка кликов по директориям.
 
             Socket socket = new Socket("localhost", 8189);
-            System.out.println("Network created...");
+            log.info("Network created...");
 
             os = new ObjectEncoderOutputStream(socket.getOutputStream());
             is = new ObjectDecoderInputStream(socket.getInputStream());
 
             Thread readThread = new Thread(this::readLoop);
             readThread.setDaemon(true);
-            readThread.start();
-
+            readThread.start(); // Запуск потока на чтение.
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // read from network
+    /**
+     * Метод чтения команд от сервера
+     */
     private void readLoop() {
         try {
             while (true) {
                 CloudMessage message = (CloudMessage) is.readObject();
                 log.info("received: {}", message);
+
                 switch (message.getType()) {
                     case FOLDER:
                         processFolderMessage((GetFolder) message);
@@ -84,14 +89,23 @@ public class Client implements Initializable {
         }
     }
 
+    /**
+     * Обработка кнопки "Назад" с серверной стороны.
+     */
     private void processBackOk(BackOk message) {
         FolderServer.setText(message.getDirBack());
     }
 
+    /**
+     * Обработка сообщения с текущей директорией.
+     */
     private void processFolderMessage(GetFolder message) {
         FolderServer.setText(message.getFolder());
     }
 
+    /**
+     * Получение списка файлов.
+     */
     private void processListMessage(ListMessage message) {
         Platform.runLater(() -> {
             serverList.getItems().clear();
@@ -99,11 +113,17 @@ public class Client implements Initializable {
         });
     }
 
+    /**
+     * Обработка скачивания файла.
+     */
     private void processFileMessage(FileMessage message) throws IOException {
         Files.write(clientDir.resolve(message.getFileName()), message.getBytes());
         Platform.runLater(this::updateClientView);
     }
 
+    /**
+     * Обновление списка файлов клиента.
+     */
     private void updateClientView() {
         try {
             clientList.getItems().clear();
@@ -118,9 +138,11 @@ public class Client implements Initializable {
         }
     }
 
+    /**
+     * Обработка кликов по директориям.
+     */
     private void initMouseListeners() {
-
-        clientList.setOnMouseClicked(e -> {
+        clientList.setOnMouseClicked(e -> { //Сторона клиента.
             if (e.getClickCount() == 2) {
                 Path current = clientDir.resolve(getItem());
                 if (Files.isDirectory(current)) {
@@ -130,11 +152,11 @@ public class Client implements Initializable {
             }
         });
 
-        serverList.setOnMouseClicked(e -> {
+        serverList.setOnMouseClicked(e -> { //Сторона сервера.
             if (e.getClickCount() == 2) {
                 String fileName = serverList.getSelectionModel().getSelectedItem();
                 try {
-                    os.writeObject(new FileRequest(fileName));
+                    os.writeObject(new ClickDir(fileName));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -143,21 +165,32 @@ public class Client implements Initializable {
 
     }
 
+    /**
+     * Загрузка файлов на сервер.
+     */
     public void upload(ActionEvent actionEvent) throws IOException {
         String fileName = clientList.getSelectionModel().getSelectedItem();
         os.writeObject(new FileMessage(clientDir.resolve(fileName)));
     }
 
-
+    /**
+     * Скачивание файлов с сервера.
+     */
     public void download(ActionEvent actionEvent) throws IOException {
         String fileName = serverList.getSelectionModel().getSelectedItem();
         os.writeObject(new FileRequest(fileName));
     }
 
+    /**
+     * Заготовка выбранного на вьюшке объекта
+     */
     private String getItem() {
         return clientList.getSelectionModel().getSelectedItem();
     }
 
+    /**
+     * Кнопка назад - клиент.
+     */
     public void BackClient(ActionEvent actionEvent) {
         clientDir = clientDir.getParent();
         Platform.runLater(this::updateClientView);
@@ -165,6 +198,9 @@ public class Client implements Initializable {
 
     }
 
+    /**
+     * Кнопка назад - сервер.
+     */
     public void BackServer(ActionEvent actionEvent) throws IOException {
         os.writeObject(new ClickBack());
     }
