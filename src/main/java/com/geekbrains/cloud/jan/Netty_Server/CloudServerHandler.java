@@ -39,7 +39,7 @@ public class CloudServerHandler extends SimpleChannelInboundHandler<CloudMessage
                 sendList(ctx);
                 sendFolder(ctx);
                 break;
-            case CLICK_BACK: // Сообщение от клиента о нажатии конрки "Назад".
+            case CLICK_BACK: // Сообщение от клиента о нажатии кнопки "Назад".
                 processBackOk(ctx);
                 break;
             case CLICK_DIR: // Сообщение от клиента о двойном клике по директории.

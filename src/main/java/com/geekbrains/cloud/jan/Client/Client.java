@@ -169,7 +169,7 @@ public class Client implements Initializable {
      * Загрузка файлов на сервер.
      */
     public void upload(ActionEvent actionEvent) throws IOException {
-        String fileName = clientList.getSelectionModel().getSelectedItem();
+        String fileName = getItem();
         os.writeObject(new FileMessage(clientDir.resolve(fileName)));
     }
 
