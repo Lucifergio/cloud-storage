@@ -9,20 +9,21 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class StartApp extends Application {
+
     static Stage authWin;
     static Stage renameWin = new Stage();
     Stage layout = new Stage();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent parent = FXMLLoader.load(getClass().getResource("loginWindow.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("newLoginWindow.fxml"));
         authWin = primaryStage;
         authWin.setScene(new Scene(parent));
         authWin.show();
     }
 
     public void startLayout() throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("layout.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("newLayout.fxml"));
         layout.setTitle("Cloud storage");
         layout.setScene(new Scene(parent));
         layout.show();

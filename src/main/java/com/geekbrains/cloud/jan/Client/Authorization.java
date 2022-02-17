@@ -9,6 +9,7 @@ import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -21,6 +22,7 @@ public class Authorization implements Initializable {
 
     public TextField loginField;
     public TextField passField;
+    public AnchorPane ssss;
 
     private ObjectDecoderInputStream is;
     private ObjectEncoderOutputStream os;

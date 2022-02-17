@@ -9,6 +9,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,6 +19,7 @@ public class CloudServerHandler extends SimpleChannelInboundHandler<CloudMessage
 
     private Path userDir;
     private Path rootDir;
+    private String login;
     private AuthService authService;
 
     @Override
@@ -67,7 +69,16 @@ public class CloudServerHandler extends SimpleChannelInboundHandler<CloudMessage
             case FILE_RENAME:
                 processFileRename((FileRename) cloudMessage, ctx);
                 break;
+            case NEW_FOLDER:
+                processNewFolder((NewFolder) cloudMessage, ctx);
+                break;
         }
+    }
+
+    private void processNewFolder(NewFolder cloudMessage, ChannelHandlerContext ctx) throws IOException {
+        Path newFolder = Paths.get(userDir + "/" + cloudMessage.getNameFolder());
+        Files.createDirectories(newFolder);
+        sendList(ctx);
     }
 
     private void processFileRename(FileRename cloudMessage, ChannelHandlerContext ctx) {
@@ -87,6 +98,8 @@ public class CloudServerHandler extends SimpleChannelInboundHandler<CloudMessage
             Path fileName = userDir.resolve(cloudMessage.getFile()).toAbsolutePath();
             Files.delete(fileName);
             sendList(ctx);
+        } catch (DirectoryNotEmptyException dne) {
+            ctx.writeAndFlush(new WarningDirNotEmpty());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -98,6 +111,7 @@ public class CloudServerHandler extends SimpleChannelInboundHandler<CloudMessage
         } else {
             userDir = Files.createDirectories(Paths.get("root/" + cloudMessage.getLogin()));
         }
+        login = cloudMessage.getLogin();
         sendList(ctx);
         sendFolder(ctx);
     }
@@ -134,7 +148,8 @@ public class CloudServerHandler extends SimpleChannelInboundHandler<CloudMessage
     }
 
     private void processDirResponse(ChannelHandlerContext ctx) throws IOException {
-        if (!userDir.equals(rootDir)) {
+
+        if (!userDir.equals(Paths.get(rootDir + "/" + login))) {
             userDir = userDir.getParent();
             ctx.writeAndFlush(new DirResponse(userDir.toString()));
             sendFolder(ctx);

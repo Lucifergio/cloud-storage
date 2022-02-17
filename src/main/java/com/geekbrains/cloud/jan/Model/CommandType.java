@@ -15,5 +15,7 @@ public enum CommandType {
     UNKNOWN_USER,
     CONNECTED,
     FILE_DELETE,
-    FILE_RENAME
+    FILE_RENAME,
+    NEW_FOLDER,
+    NOT_EMPTY
 }

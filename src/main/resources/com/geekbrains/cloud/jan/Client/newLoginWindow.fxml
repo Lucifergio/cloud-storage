@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="261.0"
+            prefWidth="394.0"
+            style="-fx-background-color: linear-gradient(to right,  RGB(52, 69, 92), RGB(35, 90, 85)); -fx-border-color: RGB(101, 216, 197);"
+            xmlns="http://javafx.com/javafx/8"
+            fx:controller="com.geekbrains.cloud.jan.Client.Authorization"
+            xmlns:fx="http://javafx.com/fxml/1">
+
+    <TextField fx:id="loginField" layoutX="34.0" layoutY="32.0" prefHeight="45.0" prefWidth="322.0" promptText="Login"
+               style="-fx-background-color: RGB(246, 255, 254); -fx-background-radius: 20;"/>
+    <TextField fx:id="passField" layoutX="34.0" layoutY="103.0" prefHeight="46.0" prefWidth="322.0"
+               promptText="Password"
+               style="-fx-background-color: RGB(246, 255, 254); -fx-background-radius: 20;"/>
+
+    <JFXButton buttonType="RAISED" layoutX="19.0" layoutY="180.0" onAction="#LoginButton" prefHeight="46.0"
+               prefWidth="161.0" ripplerFill="#2cd11d"
+               style="-fx-background-color: linear-gradient(to right,   RGB(101, 216, 197), RGB(45, 110, 85)); -fx-background-radius: 35;"
+               text="Sign In">
+        <font>
+            <Font size="20.0"/>
+        </font>
+    </JFXButton>
+
+    <JFXButton buttonType="RAISED" layoutX="211.0" layoutY="181." onAction="#RegButton" prefHeight="46.0"
+               prefWidth="161.0" ripplerFill="#2cd11d"
+               style="-fx-background-color: linear-gradient(to right,   RGB(101, 216, 197), RGB(45, 110, 85)); -fx-background-radius: 35;"
+               text="Sign Up">
+        <font>
+            <Font size="20.0"/>
+        </font>
+    </JFXButton>
+</AnchorPane>

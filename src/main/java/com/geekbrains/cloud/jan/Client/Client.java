@@ -16,6 +16,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -38,7 +40,7 @@ public class Client implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         try {
-            clientDir = Paths.get(System.getProperty("user.home"));
+            clientDir = Paths.get(System.getProperty("user.home")).normalize();
             rootClientDir = clientDir;
 
             Socket socket = new Socket("localhost", 8189);
@@ -81,11 +83,23 @@ public class Client implements Initializable {
                     case DIRECTORY_RESPONSE:
                         processDirResponse((DirResponse) message);
                         break;
+                    case NOT_EMPTY:
+                        processDirNotEmpty();
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void processDirNotEmpty() {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("The operation cannot be performed.");
+            alert.setContentText("This directory is not empty.");
+            alert.showAndWait();
+        });
     }
 
     private void processDirResponse(DirResponse message) {
@@ -128,6 +142,8 @@ public class Client implements Initializable {
                     clientDir = current;
                     Platform.runLater(this::updateClientView);
                 }
+            } else {
+                serverList.getSelectionModel().clearSelection();
             }
         });
 
@@ -139,18 +155,31 @@ public class Client implements Initializable {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+            } else {
+                clientList.getSelectionModel().clearSelection();
             }
         });
     }
 
     public void upload(ActionEvent actionEvent) throws IOException {
-        String fileName = getItemClient();
-        os.writeObject(new FileMessage(clientDir.resolve(fileName)));
+        if (getItemClient() != null) {
+            String fileName = getItemClient();
+            os.writeObject(new FileMessage(clientDir.resolve(fileName)));
+        } else {
+            warningWin();
+        }
     }
 
     public void download(ActionEvent actionEvent) throws IOException {
-        String fileName = serverList.getSelectionModel().getSelectedItem();
-        os.writeObject(new FileRequest(fileName));
+        // System.out.println(getItemServer().isEmpty());
+
+        if (getItemServer() != null) {
+            String fileName = serverList.getSelectionModel().getSelectedItem();
+            os.writeObject(new FileRequest(fileName));
+        } else {
+            warningWin();
+        }
+
     }
 
     public void BackButtonClient(ActionEvent actionEvent) {
@@ -166,6 +195,7 @@ public class Client implements Initializable {
     }
 
     public void renameButton(ActionEvent actionEvent) {
+
         if (getItemClient() != null) { //Client
             Path fileName = clientDir.resolve(getItemClient()).toAbsolutePath();
             TextInputDialog dialog = new TextInputDialog(getItemClient());
@@ -205,11 +235,7 @@ public class Client implements Initializable {
                 }
             });
         } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning");
-            alert.setHeaderText("The file could not be renamed.");
-            alert.setContentText("You have not selected a file.");
-            alert.showAndWait();
+            warningWin();
         }
     }
 
@@ -225,7 +251,11 @@ public class Client implements Initializable {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
-                Files.delete(fileName);
+                try {
+                    Files.delete(fileName);
+                } catch (IOException e) {
+                    processDirNotEmpty();
+                }
                 updateClientView();
             }
         } else if (getItemServer() != null) { //Server
@@ -241,11 +271,7 @@ public class Client implements Initializable {
                 os.writeObject(new FileDelete(getItemServer()));
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning");
-            alert.setHeaderText("The file could not be deleted.");
-            alert.setContentText("You have not selected a file.");
-            alert.showAndWait();
+            warningWin();
         }
     }
 
@@ -255,5 +281,70 @@ public class Client implements Initializable {
 
     private String getItemServer() {
         return serverList.getSelectionModel().getSelectedItem();
+    }
+
+    private void warningWin() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
+        alert.setHeaderText("The operation cannot be performed.");
+        alert.setContentText("You have not selected a file.");
+        alert.showAndWait();
+    }
+
+    public void createFolderButton(ActionEvent actionEvent) {
+
+        List<String> choices = new ArrayList<>();
+        choices.add("Client");
+        choices.add("Server");
+
+        ChoiceDialog<String> dialogChoice = new ChoiceDialog<>("Client", choices);
+        dialogChoice.setTitle("Choice Dialog");
+        dialogChoice.setHeaderText("Where do you want to create a new folder?");
+        dialogChoice.setContentText("Make a choice:");
+
+        Optional<String> resultChoice = dialogChoice.showAndWait();
+        if (resultChoice.isPresent()) {
+
+            if (resultChoice.get().equals("Client")) {
+
+                TextInputDialog dialogNameFolder = new TextInputDialog(getItemClient());
+
+                dialogNameFolder.setTitle("Create new Folder");
+                dialogNameFolder.setHeaderText("Creating a new folder.");
+                dialogNameFolder.setContentText("Please enter name of the new folder:");
+
+                Platform.runLater(() -> {
+                    Optional<String> resultNameFolder = dialogNameFolder.showAndWait();
+                    if (resultNameFolder.isPresent()) {
+                        Path newFolder = Paths.get(clientDir + "/" + resultNameFolder.get());
+                        try {
+                            Files.createDirectories(newFolder);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        updateClientView();
+                    }
+                });
+
+            } else {
+
+                TextInputDialog dialogNameFolder = new TextInputDialog(getItemServer());
+
+                dialogNameFolder.setTitle("Create new Folder");
+                dialogNameFolder.setHeaderText("Creating a new folder.");
+                dialogNameFolder.setContentText("Please enter name of the new folder:");
+
+                Platform.runLater(() -> {
+                    Optional<String> resultNameFolder = dialogNameFolder.showAndWait();
+                    if (resultNameFolder.isPresent()) {
+                        try {
+                            os.writeObject(new NewFolder(resultNameFolder.get()));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        }
     }
 }
