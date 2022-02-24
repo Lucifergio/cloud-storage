@@ -171,7 +171,6 @@ public class Client implements Initializable {
     }
 
     public void download(ActionEvent actionEvent) throws IOException {
-        // System.out.println(getItemServer().isEmpty());
 
         if (getItemServer() != null) {
             String fileName = serverList.getSelectionModel().getSelectedItem();
@@ -207,7 +206,7 @@ public class Client implements Initializable {
             Platform.runLater(() -> {
                 Optional<String> result = dialog.showAndWait();
                 if (result.isPresent()) {
-                    Path newFileName = Paths.get(fileName.getParent() + "/" + result.get());
+                    Path newFileName = Paths.get(String.valueOf(fileName.getParent()), result.get());
                     try {
                         Files.move(fileName, newFileName);
                     } catch (IOException e) {
@@ -316,7 +315,7 @@ public class Client implements Initializable {
                 Platform.runLater(() -> {
                     Optional<String> resultNameFolder = dialogNameFolder.showAndWait();
                     if (resultNameFolder.isPresent()) {
-                        Path newFolder = Paths.get(clientDir + "/" + resultNameFolder.get());
+                        Path newFolder = Paths.get(String.valueOf(clientDir), resultNameFolder.get());
                         try {
                             Files.createDirectories(newFolder);
                         } catch (IOException e) {

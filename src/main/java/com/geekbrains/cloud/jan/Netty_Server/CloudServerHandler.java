@@ -22,6 +22,11 @@ public class CloudServerHandler extends SimpleChannelInboundHandler<CloudMessage
     private String login;
     private AuthService authService;
 
+    public CloudServerHandler() {
+        authService = new DbAuth();
+        authService.start();
+    }
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
 
@@ -31,8 +36,6 @@ public class CloudServerHandler extends SimpleChannelInboundHandler<CloudMessage
             rootDir = Files.createDirectories(Paths.get("root"));
         }
 
-        authService = new DbAuth();
-        authService.start();
     }
 
     @Override
@@ -76,7 +79,7 @@ public class CloudServerHandler extends SimpleChannelInboundHandler<CloudMessage
     }
 
     private void processNewFolder(NewFolder cloudMessage, ChannelHandlerContext ctx) throws IOException {
-        Path newFolder = Paths.get(userDir + "/" + cloudMessage.getNameFolder());
+        Path newFolder = Paths.get(String.valueOf(userDir), cloudMessage.getNameFolder());
         Files.createDirectories(newFolder);
         sendList(ctx);
     }
@@ -84,7 +87,7 @@ public class CloudServerHandler extends SimpleChannelInboundHandler<CloudMessage
     private void processFileRename(FileRename cloudMessage, ChannelHandlerContext ctx) {
 
         Path fileName = userDir.resolve(cloudMessage.getFileName()).toAbsolutePath();
-        Path newFileName = Paths.get(fileName.getParent() + "/" + cloudMessage.getNewFilename());
+        Path newFileName = Paths.get(String.valueOf(fileName.getParent()), cloudMessage.getNewFilename());
         try {
             Files.move(fileName, newFileName);
             sendList(ctx);
@@ -106,10 +109,10 @@ public class CloudServerHandler extends SimpleChannelInboundHandler<CloudMessage
     }
 
     private void processConnected(UserConnected cloudMessage, ChannelHandlerContext ctx) throws IOException {
-        if (Files.exists(Paths.get("root/" + cloudMessage.getLogin()))) { // Корневая директория
-            userDir = Paths.get("root/" + cloudMessage.getLogin());
+        if (Files.exists(Paths.get("root", cloudMessage.getLogin()))) { // Корневая директория
+            userDir = Paths.get("root", cloudMessage.getLogin());
         } else {
-            userDir = Files.createDirectories(Paths.get("root/" + cloudMessage.getLogin()));
+            userDir = Files.createDirectories(Paths.get("root", cloudMessage.getLogin()));
         }
         login = cloudMessage.getLogin();
         sendList(ctx);
@@ -121,10 +124,10 @@ public class CloudServerHandler extends SimpleChannelInboundHandler<CloudMessage
             ctx.writeAndFlush(new UnknownUser());
         } else {
             authService.insertUserBatch(cloudMessage.getLogin(), cloudMessage.getPass());
-            if (Files.exists(Paths.get("root/" + cloudMessage.getLogin()))) { // Корневая директория
-                userDir = Paths.get("root/" + cloudMessage.getLogin());
+            if (Files.exists(Paths.get("root", cloudMessage.getLogin()))) { // Корневая директория
+                userDir = Paths.get("root", cloudMessage.getLogin());
             } else {
-                userDir = Files.createDirectories(Paths.get("root/" + cloudMessage.getLogin()));
+                userDir = Files.createDirectories(Paths.get("root", cloudMessage.getLogin()));
                 ctx.writeAndFlush(new ConfirmedUser());
             }
         }
@@ -149,7 +152,7 @@ public class CloudServerHandler extends SimpleChannelInboundHandler<CloudMessage
 
     private void processDirResponse(ChannelHandlerContext ctx) throws IOException {
 
-        if (!userDir.equals(Paths.get(rootDir + "/" + login))) {
+        if (!userDir.equals(Paths.get(String.valueOf(rootDir), login))) {
             userDir = userDir.getParent();
             ctx.writeAndFlush(new DirResponse(userDir.toString()));
             sendFolder(ctx);
