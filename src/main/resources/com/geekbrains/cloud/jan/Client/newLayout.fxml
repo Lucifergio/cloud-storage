@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.*?>
+<AnchorPane id="RGB(35, 60, 85)" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="746.0" prefWidth="937.0"
+            style="-fx-background-color: linear-gradient(to right, RGB(65, 120, 115), RGB(82, 99, 122)); -fx-border-color: RGB(101, 216, 197);"
+            xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.geekbrains.cloud.jan.Client.Client">
+
+    <ListView fx:id="clientList" layoutX="24.0" layoutY="111.0" prefHeight="614.0" prefWidth="332.0"
+              style="-fx-background-color: RGB(246, 255, 254); -fx-background-radius: 5;"/>
+    <ListView fx:id="serverList" layoutX="581.0" layoutY="111.0" prefHeight="614.0" prefWidth="332.0"
+              style="-fx-background-color: RGB(246, 255, 254); -fx-background-radius: 5;"/>
+
+    <TextField editable="false" fx:id="FolderClient" layoutX="23.0" layoutY="71.0" prefHeight="30.0"
+               prefWidth="261.0" style="-fx-background-color: RGB(246, 255, 254); -fx-background-radius: 10;"/>
+    <TextField editable="false" fx:id="FolderServer" layoutX="581.0" layoutY="71.0" prefHeight="30.0"
+               prefWidth="261.0" style="-fx-background-color: RGB(246, 255, 254); -fx-background-radius: 10;"/>
+
+    <Text fill="#65d8c5" layoutX="149.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Client"
+          wrappingWidth="80.83860206604004">
+        <font>
+            <Font size="25.0"/>
+        </font>
+    </Text>
+    <Text fill="#65d8c5" layoutX="703.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Server"
+          wrappingWidth="88.81760597229004">
+        <font>
+            <Font size="25.0"/>
+        </font>
+    </Text>
+    <JFXButton buttonType="RAISED" layoutX="389.0" layoutY="156.0" onAction="#upload" prefHeight="76.0"
+               prefWidth="159.0" ripplerFill="#2cd11d"
+               style="-fx-background-color: linear-gradient(to right,   RGB(101, 216, 197), RGB(45, 110, 85)); -fx-background-radius: 45;"
+               text="Upload" textFill="#084f35">
+        <font>
+            <Font size="20.0"/>
+        </font>
+    </JFXButton>
+
+    <JFXButton buttonType="RAISED" layoutX="390.0" layoutY="258.0" onAction="#download" prefHeight="76.0"
+               prefWidth="159.0" ripplerFill="#2cd11d"
+               style="-fx-background-color: linear-gradient(to right,   RGB(101, 216, 197), RGB(45, 110, 85)); -fx-background-radius: 45;"
+               text="Download" textFill="#084f35">
+        <font>
+            <Font size="20.0"/>
+        </font>
+    </JFXButton>
+
+    <JFXButton buttonType="RAISED" layoutX="389.0" layoutY="406.0" onAction="#renameButton" prefHeight="76.0"
+               prefWidth="159.0" ripplerFill="#2cd11d"
+               style="-fx-background-color: linear-gradient(to right,   RGB(101, 216, 197), RGB(45, 110, 85)); -fx-background-radius: 45;"
+               text="Rename" textFill="#084f35">
+        <font>
+            <Font size="20.0"/>
+        </font>
+    </JFXButton>
+    <JFXButton buttonType="RAISED" layoutX="389.0" layoutY="508.0" onAction="#deleteButton" prefHeight="76.0"
+               prefWidth="159.0" ripplerFill="#2cd11d"
+               style="-fx-background-color: linear-gradient(to right,   RGB(101, 216, 197), RGB(45, 110, 85)); -fx-background-radius: 45;"
+               text="Delete" textFill="#084f35">
+        <font>
+            <Font size="20.0"/>
+        </font>
+    </JFXButton>
+
+    <JFXButton buttonType="RAISED" layoutX="389.0" layoutY="610.0" onAction="#createFolderButton" prefHeight="76.0"
+               prefWidth="159.0" ripplerFill="#2cd11d"
+               style="-fx-background-color: linear-gradient(to right,   RGB(101, 216, 197), RGB(45, 110, 85)); -fx-background-radius: 45;"
+               text="New Folder" textFill="#084f35">
+        <font>
+            <Font size="20.0"/>
+        </font>
+    </JFXButton>
+
+    <JFXButton buttonType="RAISED" layoutX="291.0" layoutY="70.0" onAction="#BackButtonClient" prefHeight="32.0"
+               prefWidth="63.0" ripplerFill="#2cd11d"
+               style="-fx-background-color: linear-gradient(to right,   RGB(101, 216, 197), RGB(45, 110, 85)); -fx-background-radius: 45;"
+               text="Back" textFill="#084f35">
+        <font>
+            <Font size="16.0"/>
+        </font>
+    </JFXButton>
+    <JFXButton buttonType="RAISED" layoutX="848.0" layoutY="70.0" onAction="#BackButtonServer" prefHeight="32.0"
+               prefWidth="63.0" ripplerFill="#2cd11d"
+               style="-fx-background-color: linear-gradient(to right,   RGB(101, 216, 197), RGB(45, 110, 85)); -fx-background-radius: 45;"
+               text="Back" textFill="#084f35">
+        <font>
+            <Font size="16.0"/>
+        </font>
+    </JFXButton>
+
+</AnchorPane>

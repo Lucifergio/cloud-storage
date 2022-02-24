@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -11,12 +12,22 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.geekbrains.cloud.jan.Client.Client">
    <children>
+
+      <!--Кнопки управления-->
       <Button layoutX="398.0" layoutY="200.0" mnemonicParsing="false" onAction="#upload" prefHeight="75.0" prefWidth="139.0" text="Upload" />
       <Button layoutX="398.0" layoutY="289.0" mnemonicParsing="false" onAction="#download" prefHeight="75.0" prefWidth="139.0" text="Download" />
-      <Button fx:id="renButton" layoutX="398.0" layoutY="573.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="139.0" text="Rename" />
-      <Button fx:id="movButton" layoutX="398.0" layoutY="482.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="139.0" text="Move" />
+      <Button layoutX="398.0" layoutY="573.0" mnemonicParsing="false" onAction="#renameButton" prefHeight="75.0" prefWidth="139.0" text="Rename" />
+      <Button layoutX="398.0" layoutY="482.0" mnemonicParsing="false" onAction="#deleteButton" prefHeight="75.0" prefWidth="139.0" text="Delete" />
+
+      <!--Вьюхи клиент-сервер-->
       <ListView fx:id="clientList" layoutX="23.0" layoutY="111.0" prefHeight="614.0" prefWidth="332.0" />
       <ListView fx:id="serverList" layoutX="581.0" layoutY="111.0" prefHeight="614.0" prefWidth="332.0" />
+
+      <!--Окна полного пути до папки, кнопки "Назад"-->
+      <TextField editable="false" fx:id="FolderClient" layoutX="23.0" layoutY="71.0" prefHeight="29.0" prefWidth="267.0" />
+      <Button onAction="#BackButtonClient" layoutX="293.0" layoutY="70.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="62.0" text="Back" />
+      <TextField editable="false" fx:id="FolderServer" layoutX="581.0" layoutY="71.0" prefHeight="29.0" prefWidth="267.0" />
+      <Button onAction="#BackButtonServer" layoutX="851.0" layoutY="70.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="62.0" text="Back" />
 
       <Text layoutX="149.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Client" wrappingWidth="80.83860206604004">
          <font>
