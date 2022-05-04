@@ -99,7 +99,6 @@ public class Client implements Initializable {
         os.writeUTF("#get_file#");
         os.writeUTF(fileName);
         os.flush();
-
     }
 
     /**

@@ -21,13 +21,11 @@ public class Handler implements Runnable{
 
     private final byte[] buffer;
 
-
     public Handler (Socket socket) throws IOException {
         is = new DataInputStream(socket.getInputStream());
         os = new DataOutputStream(socket.getOutputStream());
         clientDir = Paths.get("root");
         buffer = new byte[SIZE];
-
     }
 
     public void sendServerFiles() throws IOException {
@@ -59,13 +57,10 @@ public class Handler implements Runnable{
                 }else if (command.equals("#get_file#")) {
                     String fileName = is.readUTF();
                     sendFile(fileName, os, clientDir);
-
                 }
-
-                }
+            }
         }catch (Exception e)  {
             e.printStackTrace();
         }
     }
-    
 }
