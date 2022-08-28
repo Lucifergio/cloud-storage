@@ -44,7 +44,7 @@ public class BaseServer {
 
             ChannelFuture future = bootstrap.bind(8189).sync();
 
-            authService = new DbAuth();
+            authService = DbAuth.getInstance();
             authService.start();
 
             log.info("Server started...");

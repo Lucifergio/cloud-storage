@@ -23,7 +23,7 @@ public class CloudServerHandler extends SimpleChannelInboundHandler<CloudMessage
     private AuthService authService;
 
     public CloudServerHandler() {
-        authService = new DbAuth();
+        authService = DbAuth.getInstance();
         authService.start();
     }
 

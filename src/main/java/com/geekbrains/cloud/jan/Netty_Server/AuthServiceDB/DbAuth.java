@@ -7,8 +7,20 @@ import java.sql.*;
 @Slf4j
 public class DbAuth implements AuthService {
 
+    private static DbAuth instance;
+
     private static Connection connection;
     private static Statement statement;
+
+    public static synchronized DbAuth getInstance() {
+        if (instance == null) {
+            instance = new DbAuth();
+        }
+        return instance;
+    }
+
+    private DbAuth() {
+    }
 
     @Override
     public void start() {
